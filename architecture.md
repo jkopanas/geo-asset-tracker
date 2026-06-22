@@ -897,7 +897,7 @@ sides of the split. No coordinate transformation or special API shape is needed 
 Leaflet's `map.getBounds()` returns `LatLngBounds` where `getWest()` and `getEast()` can
 produce values outside [-180, 180] when the map wraps (e.g., `getEast()` returns 190
 instead of -170). The bbox must be normalized before sending to the API:
-`lng = ((lng + 180) % 360) - 180`. This normalization lives in the `onMoveEnd` handler
+`lng = (((lng + 180) % 360) + 360) % 360 - 180`. This normalization lives in the `onMoveEnd` handler
 on `AssetMap`, before the bbox is written to state.
 
 ### Coordinate system

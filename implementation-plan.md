@@ -971,7 +971,7 @@ client/src/components/AssetMap/AssetMarker.tsx
 
 **Bbox normalization in `onMoveEnd`:**
 ```typescript
-const normLng = (lng: number) => ((lng + 180) % 360) - 180;
+const normLng = (lng: number) => (((lng + 180) % 360) + 360) % 360 - 180;
 // Get bounds from map.getBounds()
 // Apply normLng to east and west
 // Call onBboxChange({ minLng: normLng(west), minLat: south, maxLng: normLng(east), maxLat: north })
