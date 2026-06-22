@@ -1,0 +1,12 @@
+{
+  "name": "geo-asset-tracker",
+  "private": true,
+  "scripts": {
+    "dev": "concurrently \"npm run dev --prefix api\" \"npm run dev --prefix client\"",
+    "build": "npm run build --prefix api && npm run build --prefix client",
+    "install:all": "npm install && npm install --prefix api && npm install --prefix client"
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.0"
+  }
+}
