@@ -9,18 +9,21 @@ const normLng = (lng: number) => ((((lng + 180) % 360) + 360) % 360) - 180;
 interface MapControllerProps {
   onBboxChange: (bbox: BBox) => void;
   onFlyingChange: (flying: boolean) => void;
+  selectedAssetId: string | null;
   selectedAsset: Asset | undefined;
   assets: Asset[];
   resetKey: number;
 }
 
-function MapController({ onBboxChange, onFlyingChange, selectedAsset, assets, resetKey }: MapControllerProps) {
+function MapController({ onBboxChange, onFlyingChange, selectedAssetId, selectedAsset, assets, resetKey }: MapControllerProps) {
   const map = useMap();
   const hasFitBounds = useRef(false);
+  const lastFlownToId = useRef<string | undefined>(undefined);
 
   useEffect(() => {
     if (assets.length === 0) return;
     hasFitBounds.current = false;
+    lastFlownToId.current = undefined;
   }, [resetKey]); // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
@@ -50,11 +53,17 @@ function MapController({ onBboxChange, onFlyingChange, selectedAsset, assets, re
   }, [map, onBboxChange, onFlyingChange]);
 
   useEffect(() => {
+    if (!selectedAssetId) {
+      lastFlownToId.current = undefined;
+      return;
+    }
+    if (selectedAssetId === lastFlownToId.current) return;
     if (!selectedAsset) return;
+    lastFlownToId.current = selectedAssetId;
     if (map.getZoom() >= 13 && map.getBounds().contains([selectedAsset.lat, selectedAsset.lng])) return;
     onFlyingChange(true);
     map.flyTo([selectedAsset.lat, selectedAsset.lng], 13);
-  }, [map, selectedAsset, onFlyingChange]);
+  }, [map, selectedAsset, selectedAssetId, onFlyingChange]);
 
   return null;
 }
@@ -93,6 +102,7 @@ export default function AssetMap({
       <MapController
         onBboxChange={onBboxChange}
         onFlyingChange={setIsFlying}
+        selectedAssetId={selectedAssetId}
         selectedAsset={selectedAsset}
         assets={data?.data ?? []}
         resetKey={resetKey}
