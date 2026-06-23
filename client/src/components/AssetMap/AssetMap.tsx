@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { MapContainer, TileLayer, useMap } from 'react-leaflet';
 import type { Asset, AssetType, AssetStatus, BBox } from '@shared/types.js';
 import { useMapAssets } from '../../hooks/useMapAssets.js';
@@ -8,11 +8,26 @@ const normLng = (lng: number) => ((((lng + 180) % 360) + 360) % 360) - 180;
 
 interface MapControllerProps {
   onBboxChange: (bbox: BBox) => void;
+  onFlyingChange: (flying: boolean) => void;
   selectedAsset: Asset | undefined;
+  assets: Asset[];
 }
 
-function MapController({ onBboxChange, selectedAsset }: MapControllerProps) {
+function MapController({ onBboxChange, onFlyingChange, selectedAsset, assets }: MapControllerProps) {
   const map = useMap();
+  const hasFitBounds = useRef(false);
+  const isSettling = useRef(false);
+  const hasUserMoved = useRef(false);
+
+  useEffect(() => {
+    if (hasFitBounds.current || assets.length === 0) return;
+    isSettling.current = true;
+    map.fitBounds(
+      assets.map((a) => [a.lat, a.lng] as [number, number]),
+      { padding: [40, 40] },
+    );
+    hasFitBounds.current = true;
+  }, [map, assets]);
 
   useEffect(() => {
     const handleMoveEnd = () => {
@@ -23,19 +38,25 @@ function MapController({ onBboxChange, selectedAsset }: MapControllerProps) {
         maxLng: normLng(bounds.getEast()),
         maxLat: bounds.getNorth(),
       });
+      onFlyingChange(false);
+      if (isSettling.current) {
+        isSettling.current = false;
+      } else {
+        hasUserMoved.current = true;
+      }
     };
     map.on('moveend', handleMoveEnd);
     return () => {
       map.off('moveend', handleMoveEnd);
     };
-  }, [map, onBboxChange]);
+  }, [map, onBboxChange, onFlyingChange]);
 
   useEffect(() => {
     if (!selectedAsset) return;
-    if (!map.getBounds().contains([selectedAsset.lat, selectedAsset.lng])) {
-      map.panTo([selectedAsset.lat, selectedAsset.lng]);
-    }
-  }, [map, selectedAsset]);
+    if (hasUserMoved.current && map.getBounds().contains([selectedAsset.lat, selectedAsset.lng])) return;
+    onFlyingChange(true);
+    map.flyTo([selectedAsset.lat, selectedAsset.lng], 13);
+  }, [map, selectedAsset, onFlyingChange]);
 
   return null;
 }
@@ -57,19 +78,25 @@ export default function AssetMap({
 }: AssetMapProps) {
   const { data } = useMapAssets(filters, bbox);
   const selectedAsset = data?.data.find((a) => a.id === selectedAssetId);
+  const [isFlying, setIsFlying] = useState(false);
 
   return (
     <MapContainer
-      center={[42.36, -71.06]}
-      zoom={12}
+      center={[38.06, -79.39]}
+      zoom={5}
       style={{ height: '100%', width: '100%', position: 'absolute', inset: 0 }}
     >
       <TileLayer
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
       />
-      <MapController onBboxChange={onBboxChange} selectedAsset={selectedAsset} />
-      {data?.data.map((asset) => (
+      <MapController
+        onBboxChange={onBboxChange}
+        onFlyingChange={setIsFlying}
+        selectedAsset={selectedAsset}
+        assets={data?.data ?? []}
+      />
+      {!isFlying && data?.data.map((asset) => (
         <AssetMarker
           key={asset.id}
           asset={asset}
