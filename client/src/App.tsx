@@ -1,10 +1,11 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import type { AssetType, AssetStatus, BBox, Asset } from '@shared/types.js';
 import { FilterBar } from './components/FilterBar/FilterBar.js';
 import AssetMap from './components/AssetMap/AssetMap.js';
 import { AssetList } from './components/AssetList/AssetList.js';
 import { AssetDetail } from './components/AssetDetail/AssetDetail.js';
 import { AssetForm } from './components/AssetForm/AssetForm.js';
+import { useMapAssets } from './hooks/useMapAssets.js';
 
 type Filters = { type: AssetType[]; status: AssetStatus[] };
 
@@ -25,6 +26,15 @@ function App() {
     setBbox(next);
     setPage(1);
   };
+
+  const { data: mapData } = useMapAssets(filters, bbox);
+
+  useEffect(() => {
+    if (!selectedAssetId || !mapData) return;
+    const index = mapData.data.findIndex((a) => a.id === selectedAssetId);
+    if (index === -1) return;
+    setPage(Math.ceil((index + 1) / 25));
+  }, [selectedAssetId, mapData]);
 
   return (
     <div className="h-screen flex flex-col bg-canvas blueprint-grid overflow-hidden">

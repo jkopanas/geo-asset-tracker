@@ -1,3 +1,4 @@
+import { useLayoutEffect, useRef } from 'react';
 import type { Asset } from '@shared/types.js';
 import { STATUS_COLORS } from '../../lib/constants.js';
 
@@ -8,8 +9,17 @@ interface AssetListItemProps {
 }
 
 export function AssetListItem({ asset, isSelected, onSelect }: AssetListItemProps) {
+  const ref = useRef<HTMLLIElement>(null);
+
+  useLayoutEffect(() => {
+    if (isSelected && ref.current) {
+      ref.current.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }
+  }, [isSelected]);
+
   return (
     <li
+      ref={ref}
       onClick={() => onSelect(asset.id)}
       className={`flex flex-col gap-0.5 px-4 py-3 cursor-pointer border-b border-edge border-l-2 transition-colors ${
         isSelected ? 'bg-surface' : 'hover:bg-surface-hover'
