@@ -7,9 +7,10 @@
     "strict":           true,
     "esModuleInterop":  true,
     "skipLibCheck":     true,
+    "types":            ["node"],
     "paths": {
       "@shared/*": ["../shared/*"]
     }
   },
-  "include": ["src"]
+  "include": ["src", "vite.config.ts"]
 }

@@ -7,41 +7,28 @@ interface AssetListItemProps {
   onSelect: (id: string) => void;
 }
 
-export function AssetListItem({
-  asset,
-  isSelected,
-  onSelect,
-}: AssetListItemProps) {
+export function AssetListItem({ asset, isSelected, onSelect }: AssetListItemProps) {
   return (
     <li
       onClick={() => onSelect(asset.id)}
-      style={{
-        display: 'flex',
-        flexDirection: 'column',
-        gap: 2,
-        padding: '8px 12px',
-        cursor: 'pointer',
-        listStyle: 'none',
-        backgroundColor: isSelected ? '#e0f2fe' : undefined,
-        borderBottom: '1px solid #e5e7eb',
-      }}
+      className={`flex flex-col gap-0.5 px-4 py-3 cursor-pointer border-b border-edge border-l-2 transition-colors ${
+        isSelected ? 'bg-surface' : 'hover:bg-surface-hover'
+      }`}
+      style={{ borderLeftColor: STATUS_COLORS[asset.status] }}
     >
-      <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+      <div className="flex items-center justify-between gap-2">
+        <span className="text-sm font-medium text-ink truncate">{asset.name}</span>
         <span
+          className="text-[10px] font-mono shrink-0 px-1.5 py-0.5 rounded"
           style={{
-            display: 'inline-block',
-            width: 10,
-            height: 10,
-            borderRadius: '50%',
-            backgroundColor: STATUS_COLORS[asset.status],
-            flexShrink: 0,
+            color: STATUS_COLORS[asset.status],
+            backgroundColor: STATUS_COLORS[asset.status] + '26',
           }}
-        />
-        <strong>{asset.name}</strong>
+        >
+          {asset.status}
+        </span>
       </div>
-      <div style={{ fontSize: 12, color: '#6b7280', paddingLeft: 18 }}>
-        {asset.type} · {asset.status}
-      </div>
+      <span className="text-[11px] font-mono text-muted">{asset.type}</span>
     </li>
   );
 }

@@ -53,7 +53,7 @@ export default function AssetMap({
     <MapContainer
       center={[42.36, -71.06]}
       zoom={12}
-      style={{ height: 480, width: '100%' }}
+      style={{ height: '100%', width: '100%', position: 'absolute', inset: 0 }}
     >
       <TileLayer
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"

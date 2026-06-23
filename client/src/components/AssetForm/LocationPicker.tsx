@@ -36,7 +36,7 @@ export function LocationPicker({
     <MapContainer
       center={center}
       zoom={12}
-      style={{ height: 300, width: '100%' }}
+      style={{ height: 200, width: '100%' }}
     >
       <TileLayer
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"

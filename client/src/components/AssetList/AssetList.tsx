@@ -23,48 +23,68 @@ export function AssetList({
 }: AssetListProps) {
   const { data, isLoading, isError } = useAssets(filters, bbox, page);
 
-  if (isLoading) {
-    return <div>Loading…</div>;
-  }
-
-  if (isError || !data) {
-    return <div>Could not load assets. Try again.</div>;
-  }
-
-  const { data: assets, meta } = data;
-
   return (
-    <div>
-      <ul style={{ margin: 0, padding: 0 }}>
-        {assets.map((asset) => (
-          <AssetListItem
-            key={asset.id}
-            asset={asset}
-            isSelected={asset.id === selectedAssetId}
-            onSelect={onSelectAsset}
-          />
-        ))}
-      </ul>
-      {meta.pages > 1 && (
-        <div
-          style={{
-            display: 'flex',
-            alignItems: 'center',
-            gap: 8,
-            padding: '8px 12px',
-          }}
-        >
-          <button disabled={page <= 1} onClick={() => onPageChange(page - 1)}>
-            Prev
+    <div className="flex flex-col flex-1 min-h-0">
+      {/* Section header */}
+      <div className="flex items-center justify-between px-4 py-2 border-b border-edge shrink-0">
+        <span className="text-[10px] font-bold tracking-[0.15em] uppercase text-muted">
+          Assets
+        </span>
+        {data && (
+          <span className="text-[10px] font-mono text-muted">{data.meta.total} total</span>
+        )}
+      </div>
+
+      {/* List body */}
+      <div className="flex-1 overflow-y-auto">
+        {isLoading && (
+          <div className="flex items-center justify-center h-16 text-xs text-muted">
+            Loading…
+          </div>
+        )}
+        {isError && !isLoading && (
+          <div className="flex items-center justify-center h-16 text-xs text-critical px-4 text-center">
+            Could not load assets.
+          </div>
+        )}
+        {data && (
+          <ul>
+            {data.data.map((asset) => (
+              <AssetListItem
+                key={asset.id}
+                asset={asset}
+                isSelected={asset.id === selectedAssetId}
+                onSelect={onSelectAsset}
+              />
+            ))}
+            {data.data.length === 0 && (
+              <li className="flex items-center justify-center h-16 text-xs text-muted">
+                No assets in this view
+              </li>
+            )}
+          </ul>
+        )}
+      </div>
+
+      {/* Pagination */}
+      {data && data.meta.pages > 1 && (
+        <div className="flex items-center justify-between px-4 py-2.5 border-t border-edge shrink-0">
+          <button
+            disabled={page <= 1}
+            onClick={() => onPageChange(page - 1)}
+            className="text-xs text-dim hover:text-ink disabled:text-muted disabled:cursor-not-allowed transition-colors"
+          >
+            ← Prev
           </button>
-          <span>
-            {page} / {meta.pages}
+          <span className="text-[10px] font-mono text-muted">
+            {page} / {data.meta.pages}
           </span>
           <button
-            disabled={page >= meta.pages}
+            disabled={page >= data.meta.pages}
             onClick={() => onPageChange(page + 1)}
+            className="text-xs text-dim hover:text-ink disabled:text-muted disabled:cursor-not-allowed transition-colors"
           >
-            Next
+            Next →
           </button>
         </div>
       )}

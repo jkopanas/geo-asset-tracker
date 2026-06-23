@@ -27,60 +27,87 @@ function App() {
   };
 
   return (
-    <>
-      <FilterBar filters={filters} onChange={handleFiltersChange} />
+    <div className="h-screen flex flex-col bg-canvas blueprint-grid overflow-hidden">
+      {/* Topbar */}
+      <header className="h-14 bg-panel border-b border-edge flex items-center justify-between px-6 shrink-0">
+        <div className="flex items-center gap-3">
+          <div
+            className="w-2.5 h-2.5 rounded-full bg-accent shrink-0"
+            style={{ boxShadow: '0 0 8px #00b4d8, 0 0 16px #00b4d840' }}
+          />
+          <span className="text-[11px] font-semibold tracking-[0.2em] uppercase text-ink">
+            Geo Asset Tracker
+          </span>
+        </div>
+        <button
+          onClick={() => {
+            setEditingAsset(undefined);
+            setShowForm(true);
+          }}
+          className="flex items-center gap-1.5 px-3 py-1.5 text-[11px] font-semibold bg-accent text-canvas rounded transition-all hover:brightness-90 active:scale-95"
+        >
+          + New Asset
+        </button>
+      </header>
 
-      <button
-        onClick={() => {
-          setEditingAsset(undefined);
-          setShowForm(true);
-        }}
-      >
-        New Asset
-      </button>
+      {/* Main layout */}
+      <div className="flex flex-1 min-h-0">
+        {/* Sidebar: filters + list */}
+        <aside className="w-72 flex flex-col bg-panel border-r border-edge overflow-hidden shrink-0">
+          <FilterBar filters={filters} onChange={handleFiltersChange} />
+          <AssetList
+            filters={filters}
+            bbox={bbox}
+            page={page}
+            selectedAssetId={selectedAssetId}
+            onSelectAsset={setSelectedAssetId}
+            onPageChange={setPage}
+          />
+        </aside>
 
-      <AssetMap
-        filters={filters}
-        bbox={bbox}
-        selectedAssetId={selectedAssetId}
-        onBboxChange={handleBboxChange}
-        onSelectAsset={setSelectedAssetId}
-      />
+        {/* Map area with detail overlay */}
+        <div className="flex-1 relative min-w-0">
+          <AssetMap
+            filters={filters}
+            bbox={bbox}
+            selectedAssetId={selectedAssetId}
+            onBboxChange={handleBboxChange}
+            onSelectAsset={setSelectedAssetId}
+          />
+          {selectedAssetId && (
+            <div className="absolute top-4 right-4 w-72 max-h-[calc(100%-2rem)] z-[900] rounded-xl border border-edge shadow-2xl overflow-hidden flex flex-col bg-panel">
+              <AssetDetail
+                assetId={selectedAssetId}
+                filters={filters}
+                bbox={bbox}
+                onEdit={(asset) => {
+                  setEditingAsset(asset);
+                  setShowForm(true);
+                }}
+                onClose={() => setSelectedAssetId(null)}
+              />
+            </div>
+          )}
+        </div>
+      </div>
 
-      <AssetList
-        filters={filters}
-        bbox={bbox}
-        page={page}
-        selectedAssetId={selectedAssetId}
-        onSelectAsset={setSelectedAssetId}
-        onPageChange={setPage}
-      />
-
-      <AssetDetail
-        assetId={selectedAssetId}
-        filters={filters}
-        bbox={bbox}
-        onEdit={(asset) => {
-          setEditingAsset(asset);
-          setShowForm(true);
-        }}
-        onClose={() => setSelectedAssetId(null)}
-      />
-
+      {/* Form modal */}
       {showForm && (
-        <AssetForm
-          asset={editingAsset}
-          onSuccess={() => {
-            setShowForm(false);
-            setEditingAsset(undefined);
-          }}
-          onCancel={() => {
-            setShowForm(false);
-            setEditingAsset(undefined);
-          }}
-        />
+        <div className="fixed inset-0 z-[2000] flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
+          <AssetForm
+            asset={editingAsset}
+            onSuccess={() => {
+              setShowForm(false);
+              setEditingAsset(undefined);
+            }}
+            onCancel={() => {
+              setShowForm(false);
+              setEditingAsset(undefined);
+            }}
+          />
+        </div>
       )}
-    </>
+    </div>
   );
 }
 

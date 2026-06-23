@@ -1,0 +1,62 @@
+@import "tailwindcss";
+
+@theme {
+  --color-canvas: #0d1b2a;
+  --color-panel: #0f2035;
+  --color-surface: #162d44;
+  --color-surface-hover: #1c3a55;
+  --color-edge: #1e3d5c;
+  --color-accent: #00b4d8;
+  --color-ink: #d4e8f5;
+  --color-dim: #6d9ec0;
+  --color-muted: #3d6a8a;
+  --color-ok: #22c55e;
+  --color-warning: #f59e0b;
+  --color-critical: #ef4444;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+  overflow: hidden;
+}
+
+/* Blueprint grid — the signature background texture */
+.blueprint-grid {
+  background-image: linear-gradient(rgba(0, 180, 216, 0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0, 180, 216, 0.04) 1px, transparent 1px);
+  background-size: 32px 32px;
+}
+
+/* Thin scrollbar for the sidebar */
+::-webkit-scrollbar {
+  width: 4px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: #1e3d5c;
+  border-radius: 2px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #2d5c82;
+}
+
+/* Dark-mode native controls (date picker, select) */
+input,
+select,
+textarea {
+  color-scheme: dark;
+}
+
+/* Leaflet compatibility with Tailwind preflight */
+.leaflet-container img {
+  display: inline-block;
+  max-width: none;
+}
+
+.leaflet-container {
+  background: #0d1b2a;
+}
