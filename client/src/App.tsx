@@ -1,10 +1,10 @@
-import { useState } from "react";
-import type { AssetType, AssetStatus, BBox, Asset } from "@shared/types.js";
-import { FilterBar } from "./components/FilterBar/FilterBar.js";
-import AssetMap from "./components/AssetMap/AssetMap.js";
-import { AssetList } from "./components/AssetList/AssetList.js";
-import { AssetDetail } from "./components/AssetDetail/AssetDetail.js";
-import { AssetForm } from "./components/AssetForm/AssetForm.js";
+import { useState } from 'react';
+import type { AssetType, AssetStatus, BBox, Asset } from '@shared/types.js';
+import { FilterBar } from './components/FilterBar/FilterBar.js';
+import AssetMap from './components/AssetMap/AssetMap.js';
+import { AssetList } from './components/AssetList/AssetList.js';
+import { AssetDetail } from './components/AssetDetail/AssetDetail.js';
+import { AssetForm } from './components/AssetForm/AssetForm.js';
 
 type Filters = { type: AssetType[]; status: AssetStatus[] };
 

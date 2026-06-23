@@ -4,7 +4,7 @@ import type { AssetType, AssetStatus, BBox } from '@shared/types.js';
 import { useMapAssets } from '../../hooks/useMapAssets.js';
 import AssetMarker from './AssetMarker.js';
 
-const normLng = (lng: number) => (((lng + 180) % 360) + 360) % 360 - 180;
+const normLng = (lng: number) => ((((lng + 180) % 360) + 360) % 360) - 180;
 
 interface MapControllerProps {
   onBboxChange: (bbox: BBox) => void;
@@ -24,7 +24,9 @@ function MapController({ onBboxChange }: MapControllerProps) {
       });
     };
     map.on('moveend', handleMoveEnd);
-    return () => { map.off('moveend', handleMoveEnd); };
+    return () => {
+      map.off('moveend', handleMoveEnd);
+    };
   }, [map, onBboxChange]);
 
   return null;
@@ -58,7 +60,7 @@ export default function AssetMap({
         attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
       />
       <MapController onBboxChange={onBboxChange} />
-      {data?.data.map(asset => (
+      {data?.data.map((asset) => (
         <AssetMarker
           key={asset.id}
           asset={asset}

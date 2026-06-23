@@ -2,7 +2,11 @@ import { Router } from 'express';
 import type { AssetStore } from '../store/asset-store.js';
 import { validate } from '../middleware/validate.js';
 import { createAssetsController } from '../controllers/assets.controller.js';
-import { AssetQuerySchema, CreateAssetSchema, UpdateAssetSchema } from '@shared/schemas.js';
+import {
+  AssetQuerySchema,
+  CreateAssetSchema,
+  UpdateAssetSchema,
+} from '@shared/schemas.js';
 
 export function assetRouter(store: AssetStore): Router {
   const router = Router();

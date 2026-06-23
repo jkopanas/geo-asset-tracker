@@ -1,4 +1,11 @@
-import type { Asset, AssetType, AssetStatus, BBox, CreateAssetInput, UpdateAssetInput } from '@shared/types.js';
+import type {
+  Asset,
+  AssetType,
+  AssetStatus,
+  BBox,
+  CreateAssetInput,
+  UpdateAssetInput,
+} from '@shared/types.js';
 
 export interface AssetFilters {
   types?: AssetType[];

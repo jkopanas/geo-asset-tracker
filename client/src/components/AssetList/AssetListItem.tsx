@@ -7,7 +7,11 @@ interface AssetListItemProps {
   onSelect: (id: string) => void;
 }
 
-export function AssetListItem({ asset, isSelected, onSelect }: AssetListItemProps) {
+export function AssetListItem({
+  asset,
+  isSelected,
+  onSelect,
+}: AssetListItemProps) {
   return (
     <li
       onClick={() => onSelect(asset.id)}

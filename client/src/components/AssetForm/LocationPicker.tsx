@@ -1,4 +1,9 @@
-import { MapContainer, TileLayer, CircleMarker, useMapEvents } from 'react-leaflet';
+import {
+  MapContainer,
+  TileLayer,
+  CircleMarker,
+  useMapEvents,
+} from 'react-leaflet';
 
 interface LocationPickerProps {
   lat?: number;
@@ -19,12 +24,20 @@ function MapClickHandler({ onLocationChange }: MapClickHandlerProps) {
   return null;
 }
 
-export function LocationPicker({ lat, lng, onLocationChange }: LocationPickerProps) {
+export function LocationPicker({
+  lat,
+  lng,
+  onLocationChange,
+}: LocationPickerProps) {
   const center: [number, number] =
     lat !== undefined && lng !== undefined ? [lat, lng] : [42.36, -71.06];
 
   return (
-    <MapContainer center={center} zoom={12} style={{ height: 300, width: '100%' }}>
+    <MapContainer
+      center={center}
+      zoom={12}
+      style={{ height: 300, width: '100%' }}
+    >
       <TileLayer
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'

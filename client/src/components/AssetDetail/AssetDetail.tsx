@@ -12,7 +12,13 @@ interface AssetDetailProps {
   onClose: () => void;
 }
 
-export function AssetDetail({ assetId, filters, bbox, onEdit, onClose }: AssetDetailProps) {
+export function AssetDetail({
+  assetId,
+  filters,
+  bbox,
+  onEdit,
+  onClose,
+}: AssetDetailProps) {
   const { data: asset, isLoading } = useAsset(assetId, filters, bbox);
   const { deleteMutation } = useAssetMutations();
 
@@ -26,7 +32,13 @@ export function AssetDetail({ assetId, filters, bbox, onEdit, onClose }: AssetDe
 
   return (
     <div>
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+      <div
+        style={{
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+        }}
+      >
         <h2 style={{ margin: 0 }}>{asset.name}</h2>
         <button onClick={onClose}>✕</button>
       </div>

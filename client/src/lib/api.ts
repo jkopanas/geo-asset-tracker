@@ -42,7 +42,9 @@ export function getAsset(id: string): Promise<SingleAssetResponse> {
   return apiFetch<SingleAssetResponse>(`${BASE_URL}/assets/${id}`);
 }
 
-export function createAsset(body: CreateAssetInput): Promise<SingleAssetResponse> {
+export function createAsset(
+  body: CreateAssetInput
+): Promise<SingleAssetResponse> {
   return apiFetch<SingleAssetResponse>(`${BASE_URL}/assets`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
@@ -50,7 +52,10 @@ export function createAsset(body: CreateAssetInput): Promise<SingleAssetResponse
   });
 }
 
-export function updateAsset(id: string, body: UpdateAssetInput): Promise<SingleAssetResponse> {
+export function updateAsset(
+  id: string,
+  body: UpdateAssetInput
+): Promise<SingleAssetResponse> {
   return apiFetch<SingleAssetResponse>(`${BASE_URL}/assets/${id}`, {
     method: 'PATCH',
     headers: { 'Content-Type': 'application/json' },

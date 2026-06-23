@@ -8,7 +8,11 @@ interface AssetMarkerProps {
   onSelect: (id: string) => void;
 }
 
-export default function AssetMarker({ asset, isSelected, onSelect }: AssetMarkerProps) {
+export default function AssetMarker({
+  asset,
+  isSelected,
+  onSelect,
+}: AssetMarkerProps) {
   return (
     <CircleMarker
       center={[asset.lat, asset.lng]}

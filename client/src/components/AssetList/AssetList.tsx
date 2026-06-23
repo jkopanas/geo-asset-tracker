@@ -46,14 +46,24 @@ export function AssetList({
         ))}
       </ul>
       {meta.pages > 1 && (
-        <div style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '8px 12px' }}>
+        <div
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: 8,
+            padding: '8px 12px',
+          }}
+        >
           <button disabled={page <= 1} onClick={() => onPageChange(page - 1)}>
             Prev
           </button>
           <span>
             {page} / {meta.pages}
           </span>
-          <button disabled={page >= meta.pages} onClick={() => onPageChange(page + 1)}>
+          <button
+            disabled={page >= meta.pages}
+            onClick={() => onPageChange(page + 1)}
+          >
             Next
           </button>
         </div>

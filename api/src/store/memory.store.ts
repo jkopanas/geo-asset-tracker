@@ -1,5 +1,9 @@
 import { randomUUID } from 'crypto';
-import type { Asset, CreateAssetInput, UpdateAssetInput } from '@shared/types.js';
+import type {
+  Asset,
+  CreateAssetInput,
+  UpdateAssetInput,
+} from '@shared/types.js';
 import type { AssetStore, AssetFilters, AssetPage } from './asset-store.js';
 
 export class MemoryStore implements AssetStore {
@@ -9,16 +13,16 @@ export class MemoryStore implements AssetStore {
     let assets = Array.from(this.map.values());
 
     if (filters.types !== undefined) {
-      assets = assets.filter(a => filters.types!.includes(a.type));
+      assets = assets.filter((a) => filters.types!.includes(a.type));
     }
 
     if (filters.statuses !== undefined) {
-      assets = assets.filter(a => filters.statuses!.includes(a.status));
+      assets = assets.filter((a) => filters.statuses!.includes(a.status));
     }
 
     if (filters.bbox !== undefined) {
       const { minLng, minLat, maxLng, maxLat } = filters.bbox;
-      assets = assets.filter(a => {
+      assets = assets.filter((a) => {
         const latOk = a.lat >= minLat && a.lat <= maxLat;
         const lngOk =
           minLng <= maxLng

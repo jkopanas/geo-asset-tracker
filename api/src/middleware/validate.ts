@@ -12,7 +12,7 @@ declare global {
 
 export function validate(
   schema: ZodSchema,
-  source: 'body' | 'query' = 'body',
+  source: 'body' | 'query' = 'body'
 ): RequestHandler {
   return (req, _res, next) => {
     const result = schema.safeParse(req[source]);

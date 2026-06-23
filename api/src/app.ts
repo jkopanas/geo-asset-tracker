@@ -10,7 +10,10 @@ const app = express();
 
 app.use(cors({ origin: 'http://localhost:5173' }));
 app.use(express.json());
-app.use((req, _, next) => { console.log(`${req.method} ${req.path}`); next(); });
+app.use((req, _, next) => {
+  console.log(`${req.method} ${req.path}`);
+  next();
+});
 app.use('/assets', assetRouter(store));
 app.use(errorHandler);
 

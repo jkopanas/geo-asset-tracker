@@ -52,7 +52,9 @@ export function AssetForm({ asset, onSuccess, onCancel }: AssetFormProps) {
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
-      <h2 style={{ margin: '0 0 16px' }}>{asset ? 'Edit asset' : 'New asset'}</h2>
+      <h2 style={{ margin: '0 0 16px' }}>
+        {asset ? 'Edit asset' : 'New asset'}
+      </h2>
 
       <div>
         <label>Name</label>

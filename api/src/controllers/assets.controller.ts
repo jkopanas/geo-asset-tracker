@@ -1,5 +1,9 @@
 import type { RequestHandler } from 'express';
-import type { AssetQuery, CreateAssetInput, UpdateAssetInput } from '@shared/types.js';
+import type {
+  AssetQuery,
+  CreateAssetInput,
+  UpdateAssetInput,
+} from '@shared/types.js';
 import type { AssetStore, AssetFilters } from '../store/asset-store.js';
 import { NotFoundError } from '../errors/app-errors.js';
 
