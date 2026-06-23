@@ -1,20 +1,20 @@
-import { useState } from 'react';
-import type { AssetType, AssetStatus, BBox, Asset } from '@shared/types.js';
-import { FilterBar } from './components/FilterBar/FilterBar.js';
-import AssetMap from './components/AssetMap/AssetMap.js';
-import { AssetList } from './components/AssetList/AssetList.js';
-import { AssetDetail } from './components/AssetDetail/AssetDetail.js';
-import { AssetForm } from './components/AssetForm/AssetForm.js';
+import { useState } from "react";
+import type { AssetType, AssetStatus, BBox, Asset } from "@shared/types.js";
+import { FilterBar } from "./components/FilterBar/FilterBar.js";
+import AssetMap from "./components/AssetMap/AssetMap.js";
+import { AssetList } from "./components/AssetList/AssetList.js";
+import { AssetDetail } from "./components/AssetDetail/AssetDetail.js";
+import { AssetForm } from "./components/AssetForm/AssetForm.js";
 
 type Filters = { type: AssetType[]; status: AssetStatus[] };
 
 function App() {
   const [selectedAssetId, setSelectedAssetId] = useState<string | null>(null);
   const [filters, setFilters] = useState<Filters>({ type: [], status: [] });
-  const [bbox, setBbox] = useState<BBox | undefined>(undefined);
+  const [bbox, setBbox] = useState<BBox | undefined>();
   const [page, setPage] = useState(1);
   const [showForm, setShowForm] = useState(false);
-  const [editingAsset, setEditingAsset] = useState<Asset | undefined>(undefined);
+  const [editingAsset, setEditingAsset] = useState<Asset | undefined>();
 
   const handleFiltersChange = (next: Filters) => {
     setFilters(next);
