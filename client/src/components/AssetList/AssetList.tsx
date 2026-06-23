@@ -22,6 +22,16 @@ export function AssetList({
   onPageChange,
 }: AssetListProps) {
   const { data, isLoading, isError } = useAssets(filters, bbox, page);
+  const { data: unfilteredData } = useAssets(filters, undefined, 1);
+
+  const countLabel = (() => {
+    if (!data) return null;
+    const filtered = data.meta.total;
+    const full = unfilteredData?.meta.total ?? filtered;
+    if (!bbox) return `${filtered} total assets`;
+    if (filtered === 0) return '0 total assets';
+    return `${filtered} out of ${full} assets`;
+  })();
 
   return (
     <div className="flex flex-col flex-1 min-h-0">
@@ -30,8 +40,8 @@ export function AssetList({
         <span className="text-[10px] font-bold tracking-[0.15em] uppercase text-muted">
           Assets
         </span>
-        {data && (
-          <span className="text-[10px] font-mono text-muted">{data.meta.total} total</span>
+        {countLabel && (
+          <span className="text-[10px] font-mono text-muted">{countLabel}</span>
         )}
       </div>
 

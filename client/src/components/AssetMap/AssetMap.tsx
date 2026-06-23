@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 import { MapContainer, TileLayer, useMap } from 'react-leaflet';
-import type { AssetType, AssetStatus, BBox } from '@shared/types.js';
+import type { Asset, AssetType, AssetStatus, BBox } from '@shared/types.js';
 import { useMapAssets } from '../../hooks/useMapAssets.js';
 import AssetMarker from './AssetMarker.js';
 
@@ -8,9 +8,10 @@ const normLng = (lng: number) => ((((lng + 180) % 360) + 360) % 360) - 180;
 
 interface MapControllerProps {
   onBboxChange: (bbox: BBox) => void;
+  selectedAsset: Asset | undefined;
 }
 
-function MapController({ onBboxChange }: MapControllerProps) {
+function MapController({ onBboxChange, selectedAsset }: MapControllerProps) {
   const map = useMap();
 
   useEffect(() => {
@@ -28,6 +29,13 @@ function MapController({ onBboxChange }: MapControllerProps) {
       map.off('moveend', handleMoveEnd);
     };
   }, [map, onBboxChange]);
+
+  useEffect(() => {
+    if (!selectedAsset) return;
+    if (!map.getBounds().contains([selectedAsset.lat, selectedAsset.lng])) {
+      map.panTo([selectedAsset.lat, selectedAsset.lng]);
+    }
+  }, [map, selectedAsset]);
 
   return null;
 }
@@ -48,6 +56,7 @@ export default function AssetMap({
   onSelectAsset,
 }: AssetMapProps) {
   const { data } = useMapAssets(filters, bbox);
+  const selectedAsset = data?.data.find((a) => a.id === selectedAssetId);
 
   return (
     <MapContainer
@@ -59,7 +68,7 @@ export default function AssetMap({
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
       />
-      <MapController onBboxChange={onBboxChange} />
+      <MapController onBboxChange={onBboxChange} selectedAsset={selectedAsset} />
       {data?.data.map((asset) => (
         <AssetMarker
           key={asset.id}
