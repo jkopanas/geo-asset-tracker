@@ -16,6 +16,14 @@ function App() {
   const [page, setPage] = useState(1);
   const [showForm, setShowForm] = useState(false);
   const [editingAsset, setEditingAsset] = useState<Asset | undefined>();
+  const [mapResetKey, setMapResetKey] = useState(0);
+
+  const handleReset = () => {
+    setSelectedAssetId(null);
+    setBbox(undefined);
+    setPage(1);
+    setMapResetKey((k) => k + 1);
+  };
 
   const handleFiltersChange = (next: Filters) => {
     setFilters(next);
@@ -72,6 +80,7 @@ function App() {
             selectedAssetId={selectedAssetId}
             onSelectAsset={setSelectedAssetId}
             onPageChange={setPage}
+            onReset={handleReset}
           />
         </aside>
 
@@ -83,6 +92,7 @@ function App() {
             selectedAssetId={selectedAssetId}
             onBboxChange={handleBboxChange}
             onSelectAsset={setSelectedAssetId}
+            resetKey={mapResetKey}
           />
           {selectedAssetId && (
             <div className="absolute top-4 right-4 w-72 max-h-[calc(100%-2rem)] z-[900] rounded-xl border border-edge shadow-2xl overflow-hidden flex flex-col bg-panel">

@@ -11,23 +11,26 @@ interface MapControllerProps {
   onFlyingChange: (flying: boolean) => void;
   selectedAsset: Asset | undefined;
   assets: Asset[];
+  resetKey: number;
 }
 
-function MapController({ onBboxChange, onFlyingChange, selectedAsset, assets }: MapControllerProps) {
+function MapController({ onBboxChange, onFlyingChange, selectedAsset, assets, resetKey }: MapControllerProps) {
   const map = useMap();
   const hasFitBounds = useRef(false);
-  const isSettling = useRef(false);
-  const hasUserMoved = useRef(false);
+
+  useEffect(() => {
+    if (assets.length === 0) return;
+    hasFitBounds.current = false;
+  }, [resetKey]); // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
     if (hasFitBounds.current || assets.length === 0) return;
-    isSettling.current = true;
     map.fitBounds(
       assets.map((a) => [a.lat, a.lng] as [number, number]),
       { padding: [40, 40] },
     );
     hasFitBounds.current = true;
-  }, [map, assets]);
+  }, [map, assets, resetKey]);
 
   useEffect(() => {
     const handleMoveEnd = () => {
@@ -39,11 +42,6 @@ function MapController({ onBboxChange, onFlyingChange, selectedAsset, assets }: 
         maxLat: bounds.getNorth(),
       });
       onFlyingChange(false);
-      if (isSettling.current) {
-        isSettling.current = false;
-      } else {
-        hasUserMoved.current = true;
-      }
     };
     map.on('moveend', handleMoveEnd);
     return () => {
@@ -53,7 +51,7 @@ function MapController({ onBboxChange, onFlyingChange, selectedAsset, assets }: 
 
   useEffect(() => {
     if (!selectedAsset) return;
-    if (hasUserMoved.current && map.getBounds().contains([selectedAsset.lat, selectedAsset.lng])) return;
+    if (map.getZoom() >= 13 && map.getBounds().contains([selectedAsset.lat, selectedAsset.lng])) return;
     onFlyingChange(true);
     map.flyTo([selectedAsset.lat, selectedAsset.lng], 13);
   }, [map, selectedAsset, onFlyingChange]);
@@ -67,6 +65,7 @@ interface AssetMapProps {
   selectedAssetId: string | null;
   onBboxChange: (bbox: BBox) => void;
   onSelectAsset: (id: string) => void;
+  resetKey: number;
 }
 
 export default function AssetMap({
@@ -75,6 +74,7 @@ export default function AssetMap({
   selectedAssetId,
   onBboxChange,
   onSelectAsset,
+  resetKey,
 }: AssetMapProps) {
   const { data } = useMapAssets(filters, bbox);
   const selectedAsset = data?.data.find((a) => a.id === selectedAssetId);
@@ -95,6 +95,7 @@ export default function AssetMap({
         onFlyingChange={setIsFlying}
         selectedAsset={selectedAsset}
         assets={data?.data ?? []}
+        resetKey={resetKey}
       />
       {!isFlying && data?.data.map((asset) => (
         <AssetMarker

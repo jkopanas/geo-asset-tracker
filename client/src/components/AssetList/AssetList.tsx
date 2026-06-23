@@ -11,6 +11,7 @@ interface AssetListProps {
   selectedAssetId: string | null;
   onSelectAsset: (id: string) => void;
   onPageChange: (page: number) => void;
+  onReset: () => void;
 }
 
 export function AssetList({
@@ -20,6 +21,7 @@ export function AssetList({
   selectedAssetId,
   onSelectAsset,
   onPageChange,
+  onReset,
 }: AssetListProps) {
   const { data, isLoading, isError } = useAssets(filters, bbox, page);
   const { data: unfilteredData } = useAssets(filters, undefined, 1);
@@ -40,9 +42,19 @@ export function AssetList({
         <span className="text-[10px] font-bold tracking-[0.15em] uppercase text-muted">
           Assets
         </span>
-        {countLabel && (
-          <span className="text-[10px] font-mono text-muted">{countLabel}</span>
-        )}
+        <div className="flex items-center gap-3">
+          {countLabel && (
+            <span className="text-[10px] font-mono text-muted">{countLabel}</span>
+          )}
+          {selectedAssetId && (
+            <button
+              onClick={onReset}
+              className="text-[10px] font-semibold text-accent hover:brightness-90 transition-colors"
+            >
+              Reset Assets
+            </button>
+          )}
+        </div>
       </div>
 
       {/* List body */}
