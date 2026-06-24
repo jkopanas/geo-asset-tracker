@@ -21,7 +21,7 @@ describe('GET /assets bbox filter', () => {
 
     expect(Array.isArray(res.body.data)).toBe(true);
     expect(res.body.meta).toBeDefined();
-    const ids = (res.body.data as Asset[]).map(a => a.id);
+    const ids = (res.body.data as Asset[]).map((a) => a.id);
     expect(ids).toContain('17fc695a-07a0-4a6e-8822-e8f36c031199');
   });
 
@@ -44,17 +44,19 @@ describe('GET /assets bbox filter', () => {
       lat: 42,
       lng: 175,
       installed_at: '2025-01-01',
+      last_inspected_at: null,
+      notes: '',
     });
 
     const res = await request(app)
       .get('/assets?bbox=170,35,-170,50&limit=500')
       .expect(200);
 
-    const names = (res.body.data as Asset[]).map(a => a.name);
+    const names = (res.body.data as Asset[]).map((a) => a.name);
     expect(names).toContain('Antimeridian Sensor');
     // Verify the filter excluded non-antimeridian assets (e.g. lng≈-71 seed data)
     expect(
-      (res.body.data as Asset[]).every(a => a.lng >= 170 || a.lng <= -170),
+      (res.body.data as Asset[]).every((a) => a.lng >= 170 || a.lng <= -170)
     ).toBe(true);
   });
 });
@@ -79,7 +81,13 @@ describe('POST /assets validation', () => {
   it('returns 400 with VALIDATION_ERROR when lat is missing', async () => {
     const res = await request(app)
       .post('/assets')
-      .send({ name: 'Test', type: 'sensor', status: 'ok', lng: -71.0, installed_at: '2025-01-01' })
+      .send({
+        name: 'Test',
+        type: 'sensor',
+        status: 'ok',
+        lng: -71.0,
+        installed_at: '2025-01-01',
+      })
       .expect(400);
 
     expect(res.body.error.code).toBe('VALIDATION_ERROR');
@@ -89,7 +97,14 @@ describe('POST /assets validation', () => {
   it('returns 400 with field error when lat is out of range', async () => {
     const res = await request(app)
       .post('/assets')
-      .send({ name: 'Test', type: 'sensor', status: 'ok', lat: 999, lng: -71.0, installed_at: '2025-01-01' })
+      .send({
+        name: 'Test',
+        type: 'sensor',
+        status: 'ok',
+        lat: 999,
+        lng: -71.0,
+        installed_at: '2025-01-01',
+      })
       .expect(400);
 
     expect(res.body.error.code).toBe('VALIDATION_ERROR');
